@@ -22,16 +22,27 @@ class CityGrid:
             if (i, j) not in self._obstructed_blocks_coords:
                 self._obstructed_blocks_coords.append((i, j))
 
+    def is_full_covered(self) -> bool:
+        for row in self._grid:
+            for block in row:
+                if not block.is_in_cover:
+                    return False
+        return True
+
     def place_tower(self, i, j) -> None:
-        try:
-            self._grid[j][i].make_tower()
-            for x in range(-self._tower_range, self._tower_range+1):
-                for y in range(-self._tower_range, self._tower_range+1):
-                    if i+x in range(len(self._grid[0])) and j+y in range(len(self._grid)):
-                        self._grid[j+y][i+x].cover()
+        self._grid[j][i].make_tower()
+        for x in range(-self._tower_range, self._tower_range+1):
+            for y in range(-self._tower_range, self._tower_range+1):
+                if i+x in range(len(self._grid[0])) and j+y in range(len(self._grid)):
+                    self._grid[j+y][i+x].cover()
+
+    def fill_towers(self) -> None:
+        while not self.is_full_covered():
+            for x in range(len(self._grid[0])):
+                for y in range(len(self._grid)):
+                    if not self._grid[y][x].is_in_cover and self._grid[y][x].is_obstructed:
+                        self.place_tower(x, y)
                     
-        except ValueError as e:
-            print(e)
 
     def __str__(self) -> str:
         return "\n".join(map(str, self._grid))
