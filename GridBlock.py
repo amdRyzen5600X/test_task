@@ -35,3 +35,6 @@ class GridBlock:
 
     def __str__(self) -> str:
         return self._string
+
+    def __repr__(self) -> str:
+        return self._string

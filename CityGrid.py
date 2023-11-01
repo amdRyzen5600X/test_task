@@ -37,11 +37,13 @@ class CityGrid:
                     self._grid[j+y][i+x].cover()
 
     def fill_towers(self) -> None:
-        while not self.is_full_covered():
-            for x in range(len(self._grid[0])):
-                for y in range(len(self._grid)):
-                    if not self._grid[y][x].is_in_cover and self._grid[y][x].is_obstructed:
+        for x in range(len(self._grid[0])):
+            for y in range(len(self._grid)):
+                if not self._grid[y][x].is_in_cover and not self._grid[y][x].is_obstructed:
+                    try:
                         self.place_tower(x, y)
+                    except ValueError:
+                        continue
                     
 
     def __str__(self) -> str:
